@@ -2,6 +2,8 @@ import styles from "../../styles/Pokemon.module.css";
 
 import Image from "next/image";
 
+import { useRouter } from "next/router";
+
 export const getStaticPaths = async () => {
   const maxPokemons = 251;
   const api = "https://pokeapi.co/api/v2/pokemon/";
@@ -18,7 +20,7 @@ export const getStaticPaths = async () => {
 
   return {
     paths,
-    fallback: false,
+    fallback: true,
   };
 };
 
@@ -37,7 +39,12 @@ export const getStaticProps = async (context) => {
 };
 
 function Pokemon({ pokemon }) {
+  const router = useRouter();
   const src = `https://cdn.traction.one/pokedex/pokemon/${pokemon.id}.png`;
+
+  if (router.isFallback) {
+    return <div>Carregando...</div>;
+  }
 
   return (
     <div className={styles.pokemon_container}>
